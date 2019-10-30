@@ -2,17 +2,52 @@ import React from "react";
 
 import Form from "./components/Form";
 import Titles from "./components/Titles";
-import Weather from "./components/Weather";
+import Presenter from "./components/Presenter";
 
-const WEATHER_API_KEY = "d2ee401549c61995396bb55b409103a3";
+const API_KEY = "d2ee401549c61995396bb55b409103a3";
+const API_URL = "http://api.openweathermap.org/data/2.5/weather"
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      city: undefined,
+      country: undefined,
+      temperature: undefined,
+      minTemperature: undefined,
+      maxTemperature: undefined,
+      error: undefined,
+    };
+  }
+
   getWeather = async (event) => {
     event.preventDefault();
-    const api_request = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=
-      Manchester,uk&appid=${WEATHER_API_KEY}&units=metric`);
-    const response_data = await api_request.json();
-    console.log(response_data);
+    const city = event.target.elements.city.value;
+    const country = event.target.elements.country.value;
+
+    const resp = await fetch(`${API_URL}?q=${city},${country}&appid=${API_KEY}&units=metric`);
+    const response_data = await resp.json();
+
+    if (city && country) {
+      console.log(response_data);
+      this.setState({
+        city: response_data.name,
+        country: response_data.sys.country,
+        temperature: response_data.main.temp,
+        minTemperature: response_data.main.temp_min,
+        maxTemperature: response_data.main.temp_max,
+        error: '',
+      });
+    } else {
+      this.setState({
+        city: undefined,
+        country: undefined,
+        temperature: undefined,
+        minTemperature: undefined,
+        maxTemperature: undefined,
+        error: "Please enter city and country values",
+      });
+    }
   }
 
   render() {
@@ -20,7 +55,14 @@ class App extends React.Component {
       <div>
         <Titles/>
         <Form getWeather={this.getWeather}/>
-        <Weather/>
+        <Presenter
+          city={this.state.city}
+          country={this.state.country}
+          temperature={this.state.temperature}
+          minTemperature={this.state.minTemperature}
+          maxTemperature={this.state.maxTemperature}
+          error={this.state.error}
+        />
       </div>
     );
   }
