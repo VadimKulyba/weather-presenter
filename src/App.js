@@ -20,16 +20,11 @@ class App extends React.Component {
     };
   }
 
-  getWeather = async (event) => {
-    event.preventDefault();
-    const city = event.target.elements.city.value;
-    const country = event.target.elements.country.value;
-
+  getWeather = async (country, city) => {
     const resp = await fetch(`${API_URL}?q=${city},${country}&appid=${API_KEY}&units=metric`);
     const response_data = await resp.json();
 
-    if (city && country) {
-      console.log(response_data);
+    if (city) {
       this.setState({
         city: response_data.name,
         country: response_data.sys.country,
