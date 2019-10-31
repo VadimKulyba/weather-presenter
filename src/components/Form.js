@@ -11,16 +11,17 @@ function makeOptionItem(name) {
 
 function generateCitiesList(country) {
     const citiesList = geoData[country];
-    return [makeOptionItem(""), ...citiesList.map(makeOptionItem)]
+    return [makeOptionItem(""), ...citiesList.map(makeOptionItem)];
 }
+
+const INIT_COUNTRY = "United Kingdom";
 
 class Form extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeCountry: "United Kingdom",
-            activeCity: "",
-            cytiesList: generateCitiesList("United Kingdom"),
+            activeCountry: INIT_COUNTRY,
+            cytiesList: generateCitiesList(INIT_COUNTRY),
             error: undefined,
         };
     }
@@ -29,7 +30,7 @@ class Form extends React.Component {
         this.setState({
             activeCountry: event.target.value,
             activeCity: "",
-            cytiesList: generateCitiesList(event.target.value)
+            cytiesList: generateCitiesList(event.target.value),
         });
         this.props.getWeather(event.target.value, "");
     }

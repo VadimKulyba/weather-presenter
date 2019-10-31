@@ -7,8 +7,10 @@ class City extends React.Component {
     }
 
     componentWillUpdate() {
-        if (this.props.activeCity === "") {
-            this.citySelectRef.current[0].setAttribute('selected', '');
+        if (typeof this.props.activeCity && this.props.activeCity !== "") {
+            this.citySelectRef.current[0].removeAttribute('selected');
+        } else if (this.props.activeCity === "") {
+            this.citySelectRef.current[0].setAttribute('selected', true);
         }
     }
 
