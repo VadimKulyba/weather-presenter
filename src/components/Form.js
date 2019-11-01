@@ -1,62 +1,71 @@
-import React from "react";
+import React from 'react';
 
-import City from "./form/City";
-import Country from "./form/Country";
+import City from './form/City';
+import Country from './form/Country';
 
 import geoData from '../data/geo.json';
 
 function makeOptionItem(name) {
-    return <option>{name}</option>;
+  return <option>{name}</option>;
 }
 
 function generateCitiesList(country) {
-    const citiesList = geoData[country];
-    return [makeOptionItem(""), ...citiesList.map(makeOptionItem)];
+  const citiesList = geoData[country];
+  return [makeOptionItem(''), ...citiesList.map(makeOptionItem)];
 }
 
-const INIT_COUNTRY = "United Kingdom";
+const INIT_COUNTRY = 'United Kingdom';
 
 class Form extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            activeCountry: INIT_COUNTRY,
-            cytiesList: generateCitiesList(INIT_COUNTRY),
-            error: undefined,
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeCountry: INIT_COUNTRY,
+      cytiesList: generateCitiesList(INIT_COUNTRY),
+    };
+  }
 
-    changeCountryHandler = (event) => {
-        this.setState({
-            activeCountry: event.target.value,
-            activeCity: "",
-            cytiesList: generateCitiesList(event.target.value),
-        });
-        this.props.getWeather(event.target.value, "");
-    }
+  changeCountryHandler = (event) => {
+    const { getWeather } = this.props;
+    this.setState({
+      activeCountry: event.target.value,
+      activeCity: '',
+      cytiesList: generateCitiesList(event.target.value),
+    });
+    getWeather(event.target.value, '');
+  }
 
-    changeCityHandler = (event) => {
-        this.setState({
-            activeCity: event.target.value,
-        });
-        this.props.getWeather(this.state.activeCountry, event.target.value);
-    }
+  changeCityHandler = (event) => {
+    const { activeCountry } = this.state;
+    const { getWeather } = this.props;
+    this.setState({
+      activeCity: event.target.value,
+    });
+    getWeather(activeCountry, event.target.value);
+  }
 
-    render() {
-        return (
-            <div>
-                <Country
-                    geoData={geoData}
-                    activeCountry={this.state.activeCountry}
-                    hander={this.changeCountryHandler}
-                    makeOptionItem={makeOptionItem} />
-                <City
-                    activeCity={this.state.activeCity}
-                    hander={this.changeCityHandler}
-                    cytiesList={this.state.cytiesList} />
-            </div>
-        );
-    }
+  render() {
+    const {
+      activeCountry,
+      activeCity,
+      cytiesList,
+    } = this.state;
+    return (
+      <div>
+        <Country
+          activeCountry={activeCountry}
+          geoData={geoData}
+          hander={this.changeCountryHandler}
+          makeOptionItem={makeOptionItem}
+        />
+        <City
+          activeCity={activeCity}
+          cytiesList={cytiesList}
+          hander={this.changeCityHandler}
+        />
+      </div>
+    );
+  }
 }
 
 export default Form;

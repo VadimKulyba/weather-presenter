@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import Form from "./components/Form";
-import Titles from "./components/Titles";
-import Presenter from "./components/Presenter";
+import Form from './components/Form';
+import Titles from './components/Titles';
+import Presenter from './components/Presenter';
 
-const API_KEY = "d2ee401549c61995396bb55b409103a3";
-const API_URL = "http://api.openweathermap.org/data/2.5/weather"
+const API_KEY = 'd2ee401549c61995396bb55b409103a3';
+const API_URL = 'http://api.openweathermap.org/data/2.5/weather';
 
 class App extends React.Component {
   constructor(props) {
@@ -22,15 +22,15 @@ class App extends React.Component {
 
   getWeather = async (country, city) => {
     const resp = await fetch(`${API_URL}?q=${city},${country}&appid=${API_KEY}&units=metric`);
-    const response_data = await resp.json();
+    const responseData = await resp.json();
 
     if (city) {
       this.setState({
-        city: response_data.name,
-        country: response_data.sys.country,
-        temperature: response_data.main.temp,
-        minTemperature: response_data.main.temp_min,
-        maxTemperature: response_data.main.temp_max,
+        city: responseData.name,
+        country: responseData.sys.country,
+        temperature: responseData.main.temp,
+        minTemperature: responseData.main.temp_min,
+        maxTemperature: responseData.main.temp_max,
         error: '',
       });
     } else {
@@ -40,23 +40,31 @@ class App extends React.Component {
         temperature: undefined,
         minTemperature: undefined,
         maxTemperature: undefined,
-        error: "Please enter city and country values",
+        error: 'Please enter city and country values',
       });
     }
   }
 
   render() {
+    const {
+      city,
+      country,
+      temperature,
+      minTemperature,
+      maxTemperature,
+      error,
+    } = this.state;
     return (
       <div>
-        <Titles/>
-        <Form getWeather={this.getWeather}/>
+        <Titles />
+        <Form getWeather={this.getWeather} />
         <Presenter
-          city={this.state.city}
-          country={this.state.country}
-          temperature={this.state.temperature}
-          minTemperature={this.state.minTemperature}
-          maxTemperature={this.state.maxTemperature}
-          error={this.state.error}
+          city={city}
+          country={country}
+          temperature={temperature}
+          minTemperature={minTemperature}
+          maxTemperature={maxTemperature}
+          error={error}
         />
       </div>
     );
